@@ -1,6 +1,9 @@
 create a map variable which stores the apikey and counts number of requests:   
 `add ns variable session_map -type map(text(6),ulong,100) -init 0 -expires 1`
 
+text(6) - key is 6 characters long  
+100 - max number of entries in session_map  
+
 create an assignment action to increase counter:  
 `add ns assignment increment_session -variable '$session_map[http.req.header("Apikey").value(0)]' -add 1`
 
