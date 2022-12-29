@@ -8,7 +8,7 @@
 `add ns limitIdentifier Jeca_LI3 -timeSlice 30000 -mode REQUEST_RATE -limitType SMOOTH -selectorName Jeca3`  
 `add ns limitIdentifier Jeca_LI4 -timeSlice 30000 -mode REQUEST_RATE -limitType SMOOTH -selectorName Jeca4`  
 
-`add responder policy Jeca_resp_pol1 "SYS.CHECK_LIMIT(\"Jeca_LI1\") && http.REQ.URL.CONTAINS(\"prolece\")" resp_act_respondwith429 -logAction ratelimit_log_action`  
-`add responder policy Jeca_resp_pol2 "SYS.CHECK_LIMIT(\"Jeca_LI2\") && http.REQ.URL.CONTAINS(\"leto\")" resp_act_respondwith429 -logAction ratelimit_log_action`  
-`add responder policy Jeca_resp_pol3 "SYS.CHECK_LIMIT(\"Jeca_LI3\") && http.REQ.URL.CONTAINS(\"jesen\")" resp_act_respondwith429 -logAction ratelimit_log_action`  
-`add responder policy Jeca_resp_pol4 "SYS.CHECK_LIMIT(\"Jeca_LI4\") && http.REQ.URL.CONTAINS(\"zima\")" resp_act_respondwith429 -logAction ratelimit_log_action`  
+`add responder policy Jeca_resp_pol1 http.REQ.URL.CONTAINS(\"prolece\")" && "SYS.CHECK_LIMIT(\"Jeca_LI1\") && resp_act_respondwith429 -logAction ratelimit_log_action`  
+`add responder policy Jeca_resp_pol2 http.REQ.URL.CONTAINS(\"leto\")" && "SYS.CHECK_LIMIT(\"Jeca_LI2\") &&resp_act_respondwith429 -logAction ratelimit_log_action`  
+`add responder policy Jeca_resp_pol3 http.REQ.URL.CONTAINS(\"jesen\")" && "SYS.CHECK_LIMIT(\"Jeca_LI3\") && resp_act_respondwith429 -logAction ratelimit_log_action`  
+`add responder policy Jeca_resp_pol4 http.REQ.URL.CONTAINS(\"zima\")" && "SYS.CHECK_LIMIT(\"Jeca_LI4\") && resp_act_respondwith429 -logAction ratelimit_log_action`  
