@@ -19,12 +19,21 @@ bind vlan 2 -ifnum 1/2
 bind vlan 2 -ifnum 1/3
 ```
 
-Create pattern set with a list of ip addresses and/or subnets to bypass:
+Create pattern set with a list of *destination* ip addresses and/or subnets to bypass:
 
 ```
-bind policy dataset ds-bypass "10.0.0.0/8"
-bind policy dataset ds-bypass "192.168.0.0/16"
-bind policy dataset ds-bypass 8.8.8.8
+add policy dataset ds_bypass ipv4
+bind policy dataset ds_bypass "10.0.0.0/8"
+bind policy dataset ds_bypass "192.168.0.0/16"
+bind policy dataset ds_bypass 8.8.8.8
+```
+
+Separate pattern set with a list of *source* ip addresses and/or subnets to bypass:
+
+```
+add policy dataset ds_bypass_src ipv4
+bind policy dataset ds_bypass_src "10.0.0.0/8"
+bind policy dataset ds_bypass_src "192.168.0.0/
 ```
 
 Vserver configuration is based on following CTX article:
@@ -40,8 +49,8 @@ Create service (or service-groups as in the aforementioned article):
 
 The goal is to redirect multiple ports. This can be done either with a single vserver with appripriate listen policy or with multiple vservers listening on a single port:
 ```
-add lb vserver vs-any-80 ANY * 80 -persistenceType NONE -Listenpolicy "CLIENT.INTERFACE.ID.EQ(\"1/1\") && client.IP.DST.TYPECAST_TEXT_T.EQUALS_ANY(\"ds-bypass\").NOT" -m MAC -cltTimeout 120
-add lb vserver vs-any-443 ANY * 443 -persistenceType NONE -Listenpolicy "CLIENT.INTERFACE.ID.EQ(\"1/1\") && client.IP.DST.TYPECAST_TEXT_T.EQUALS_ANY(\"ds-bypass\").NOT" -m MAC -cltTimeout 120
+add lb vserver vs-any-80 ANY * 80 -persistenceType NONE -Listenpolicy "CLIENT.INTERFACE.ID.EQ(\"1/1\") && client.IP.DST.TYPECAST_TEXT_T.EQUALS_ANY(\"ds_bypass\").NOT && client.IP.SRC.TYPECAST_TEXT_T.EQUALS_ANY(\"ds_bypass_src\").NOT" -m MAC -cltTimeout 120
+add lb vserver vs-any-443 ANY * 443 -persistenceType NONE -Listenpolicy "CLIENT.INTERFACE.ID.EQ(\"1/1\") && client.IP.DST.TYPECAST_TEXT_T.EQUALS_ANY(\"ds_bypass\").NOT && client.IP.SRC.TYPECAST_TEXT_T.EQUALS_ANY(\"ds_bypass_src\").NOT" -m MAC -cltTimeout 120
 ```
 
 Bind services to vservers:
